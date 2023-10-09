@@ -5,5 +5,12 @@ interface WeatherLayoutProps {
     children: ReactNode
 }
 export default function Layout({ children }: WeatherLayoutProps) {
-    return <ClientProvider>{children}</ClientProvider>
+    return (
+        <ClientProvider>
+            <section>
+                <h1>Weather</h1>
+                {children}
+            </section>
+        </ClientProvider>
+    )
 }
