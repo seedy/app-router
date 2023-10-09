@@ -9,6 +9,9 @@ const GEOLOCATION_OPTIONS = {
 const getCurrentPositionPromise = () => new Promise<GeolocationPosition>((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, GEOLOCATION_OPTIONS))
 
 const getCurrentCoords = async () => {
+    if (typeof window === "undefined") {
+        return { latitude: 0, longitude: 0 }
+    }
     if (!("geolocation" in navigator)) {
         throw new Error("Geolocation is not supported");
     }

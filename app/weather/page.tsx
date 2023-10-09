@@ -1,9 +1,10 @@
 import { getDefaultWeather } from "@/api/weather";
+import Geolocation from "@/components/Geolocation";
 import LocalizedWeather from "@/components/LocalizedWeather";
-import { WEATHER_QUERY_KEYS } from "@/constants/weather";
-import getServerQueryClient from "@/helpers/getServerQueryClient";
-import { Hydrate, dehydrate } from "@tanstack/react-query";
+import LocalizedWeatherLoading from "@/components/LocalizedWeather/loading";
+import ReverseLocationLoading from "@/components/ReverseLocation/loading";
 import { Metadata } from "next"
+import { Suspense } from "react";
 
 
 export const metadata: Metadata = {
@@ -17,17 +18,18 @@ async function getData() {
 }
 
 export default async function Weather() {
-    const queryClient = getServerQueryClient();
-    await queryClient.prefetchQuery({ queryKey: WEATHER_QUERY_KEYS.all, queryFn: getData });
-    const dehydratedState = dehydrate(queryClient)
+    await getData();
 
     return (
-        <Hydrate state={dehydratedState}>
-            <section>
-                <h1>Weather</h1>
-                <LocalizedWeather />
-            </section>
-        </Hydrate>
+        <section>
+            <Suspense fallback={<div>Loading geolocation</div>}>
+                <Geolocation>
+                    <Suspense fallback={<LocalizedWeatherLoading />}>
+                        <LocalizedWeather fallback={<ReverseLocationLoading />} />
+                    </Suspense>
+                </Geolocation>
+            </Suspense>
+        </section>
 
     )
 }

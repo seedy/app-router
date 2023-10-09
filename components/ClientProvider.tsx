@@ -7,7 +7,7 @@ interface ClientProviderProps {
     children: ReactNode
 }
 const ClientProvider = ({ children }: ClientProviderProps) => {
-    const [queryClient] = useState(() => new QueryClient());
+    const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { suspense: true } } }));
 
     return (
         <QueryClientProvider client={queryClient}>
